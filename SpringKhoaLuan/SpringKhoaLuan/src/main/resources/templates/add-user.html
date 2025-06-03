@@ -2,193 +2,242 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head>
-    <meta charset="UTF-8">
-    <title>Thêm người dùng</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Thêm người dùng</title>
     <th:block th:replace="base :: styles"></th:block> 
 </head>
 <body>
-<div th:replace="base :: header"></div>
+    <div th:replace="base :: header"></div>
 
-<div class="container mt-4">
-    <h2>Thêm người dùng mới</h2>
+    <div class="container mt-4">
+        <h2>Thêm người dùng mới</h2>
 
-    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
 
-    <form th:action="@{/admin/add-user}" method="post" enctype="multipart/form-data" class="mt-4" novalidate>
-        <!-- Họ và tên -->
-        <div class="mb-3">
-            <label class="form-label" for="fullname">Họ và tên:</label>
-            <input type="text" name="fullname" id="fullname" class="form-control" required th:value="${fullname}"/>
-        </div>
+        <!-- Thông báo lỗi tổng hợp -->
+        <div id="formErrorMsg" class="alert alert-danger" style="display:none"></div>
 
-        <!-- Tên đăng nhập -->
-        <div class="mb-3">
-            <label class="form-label" for="username">Tên đăng nhập:</label>
-            <input type="text" name="username" id="username" class="form-control" required th:value="${username}"/>
-        </div>
+        <form id="addUserForm" th:action="@{/admin/add-user}" method="post" enctype="multipart/form-data" class="mt-4" novalidate>
+            <!-- Họ và tên -->
+            <div class="mb-3">
+                <label class="form-label" for="fullname">Họ và tên:</label>
+                <input type="text" name="fullname" id="fullname" class="form-control" required th:value="${fullname}"/>
+            </div>
 
-        <!-- Mật khẩu -->
-        <div class="mb-3">
-            <label class="form-label" for="password">Mật khẩu:</label>
-            <input type="password" name="password" id="password" class="form-control" required/>
-        </div>
+            <!-- Tên đăng nhập -->
+            <div class="mb-3">
+                <label class="form-label" for="username">Tên đăng nhập:</label>
+                <input type="text" name="username" id="username" class="form-control" required th:value="${username}"/>
+            </div>
 
-        <!-- Email -->
-        <div class="mb-3">
-            <label class="form-label" for="email">Email:</label>
-            <input type="email" name="email" id="email" class="form-control" th:value="${email}"/>
-        </div>
+            <!-- Mật khẩu -->
+            <div class="mb-3">
+                <label class="form-label" for="password">Mật khẩu:</label>
+                <input type="password" name="password" id="password" class="form-control" required/>
+            </div>
 
-        <!-- Vai trò -->
-        <div class="mb-3">
-            <label class="form-label" for="role">Vai trò:</label>
-            <select name="role" id="role" class="form-select">
-                <option value="ROLE_ADMIN">Admin</option>
-                <option value="ROLE_GIAOVU">Giáo vụ</option>
-                <option value="ROLE_GIANGVIEN">Giảng viên</option>
-                <option value="ROLE_SINHVIEN">Sinh viên</option>
-            </select>
-        </div>
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label" for="email">Email:</label>
+                <input type="email" name="email" id="email" class="form-control" th:value="${email}"/>
+            </div>
 
-        <!-- Khoa -->
-        <div class="mb-3" id="khoaField" style="display:none;">
-            <label class="form-label" for="khoa">Khoa:</label>
-            <select id="khoa" name="khoa" class="form-select">
-                <option value="">-- Chọn khoa --</option>
-                <option value="Công nghệ thông tin">Công nghệ thông tin</option>
-                <option value="Quản trị kinh doanh">Quản trị kinh doanh</option>
-                <option value="Tài chính - Ngân hàng">Tài chính - Ngân hàng</option>
-                <option value="Ngôn ngữ">Ngôn ngữ</option>
-                <option value="Công nghệ sinh học">Công nghệ sinh học</option>
-            </select>
-        </div>
+            <!-- Vai trò -->
+            <div class="mb-3">
+                <label class="form-label" for="role">Vai trò:</label>
+                <select name="role" id="role" class="form-select">
+                    <option value="ROLE_ADMIN">Admin</option>
+                    <option value="ROLE_GIAOVU">Giáo vụ</option>
+                    <option value="ROLE_GIANGVIEN">Giảng viên</option>
+                    <option value="ROLE_SINHVIEN">Sinh viên</option>
+                </select>
+            </div>
 
-        <!-- Ngành -->
-        <div class="mb-3" id="nganhField" style="display:none;">
-            <label class="form-label" for="nganh">Ngành:</label>
-            <select id="nganh" name="nganh" class="form-select" disabled>
-                <option value="">-- Chọn ngành --</option>
-            </select>
-        </div>
+            <!-- Khoa -->
+            <div class="mb-3" id="khoaField" style="display:none;">
+                <label class="form-label" for="khoa">Khoa:</label>
+                <select id="khoa" name="khoa" class="form-select">
+                    <option value="">-- Chọn khoa --</option>
+                    <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+                    <option value="Quản trị kinh doanh">Quản trị kinh doanh</option>
+                    <option value="Tài chính - Ngân hàng">Tài chính - Ngân hàng</option>
+                    <option value="Ngôn ngữ">Ngôn ngữ</option>
+                    <option value="Công nghệ sinh học">Công nghệ sinh học</option>
+                </select>
+            </div>
 
-        <!-- Khóa học -->
-        <div class="mb-3" id="khoaHocField" style="display:none;">
-            <label class="form-label" for="khoaHoc">Khóa học:</label>
-            <input type="text" name="khoaHoc" id="khoaHoc" class="form-control" placeholder="Ví dụ: 2022" />
-        </div>
+            <!-- Ngành -->
+            <div class="mb-3" id="nganhField" style="display:none;">
+                <label class="form-label" for="nganh">Ngành:</label>
+                <select id="nganh" name="nganh" class="form-select" disabled>
+                    <option value="">-- Chọn ngành --</option>
+                </select>
+            </div>
 
-        <!-- Avatar -->
-        <div class="mb-3">
-            <label class="form-label" for="avatar">Avatar:</label>
-            <input type="file" name="avatar" id="avatar" class="form-control" />
-        </div>
+            <!-- Khóa học -->
+            <div class="mb-3" id="khoaHocField" style="display:none;">
+                <label class="form-label" for="khoaHoc">Khóa học:</label>
+                <input type="text" name="khoaHoc" id="khoaHoc" class="form-control" placeholder="Ví dụ: 2022" />
+            </div>
 
-        <button type="submit" class="btn btn-primary">Thêm người dùng</button>
-        <a th:href="@{/admin}" class="btn btn-secondary ms-2">Quay lại</a>
-    </form>
-</div>
+            <!-- Avatar -->
+            <div class="mb-3">
+                <label class="form-label" for="avatar">Avatar:</label>
+                <input type="file" name="avatar" id="avatar" class="form-control" />
+            </div>
 
-<div th:replace="base :: footer"></div>
+            <button type="submit" class="btn btn-primary">Thêm người dùng</button>
+            <a th:href="@{/admin}" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
 
-<script>
-const NGANH_THEO_KHOA = {
-    "Công nghệ thông tin": [
-        "Khoa học máy tính",
-        "Hệ thống thông tin quản lý",
-        "Công nghệ thông tin",
-        "Trí tuệ nhân tạo"
-    ],
-    "Quản trị kinh doanh": [
-        "Kinh doanh quốc tế",
-        "Marketing",
-        "Quản trị nhân lực",
-        "Quản trị kinh doanh",
-        "Logistics và Quản lý chuỗi cung ứng"
-    ],
-    "Tài chính - Ngân hàng": [
-        "Tài chính – Ngân hàng",
-        "Công nghệ tài chính",
-        "Bảo hiểm"
-    ],
-    "Ngôn ngữ": [
-        "Ngôn ngữ Anh",
-        "Ngôn ngữ Trung Quốc",
-        "Ngôn ngữ Nhật",
-        "Ngôn ngữ Hàn Quốc"
-    ],
-    "Công nghệ sinh học": [
-        "Công nghệ sinh học",
-        "Công nghệ thực phẩm"
-    ]
-};
+    <div th:replace="base :: footer"></div>
 
-function toggleFields() {
-    const role = document.getElementById('role').value;
-    const khoaField = document.getElementById('khoaField');
-    const nganhField = document.getElementById('nganhField');
-    const khoaHocField = document.getElementById('khoaHocField');
-    const khoa = document.getElementById('khoa');
-    const nganh = document.getElementById('nganh');
+    <script>
+        const NGANH_THEO_KHOA = {
+            "Công nghệ thông tin": [
+                "Khoa học máy tính",
+                "Hệ thống thông tin quản lý",
+                "Công nghệ thông tin",
+                "Trí tuệ nhân tạo"
+            ],
+            "Quản trị kinh doanh": [
+                "Kinh doanh quốc tế",
+                "Marketing",
+                "Quản trị nhân lực",
+                "Quản trị kinh doanh",
+                "Logistics và Quản lý chuỗi cung ứng"
+            ],
+            "Tài chính - Ngân hàng": [
+                "Tài chính – Ngân hàng",
+                "Công nghệ tài chính",
+                "Bảo hiểm"
+            ],
+            "Ngôn ngữ": [
+                "Ngôn ngữ Anh",
+                "Ngôn ngữ Trung Quốc",
+                "Ngôn ngữ Nhật",
+                "Ngôn ngữ Hàn Quốc"
+            ],
+            "Công nghệ sinh học": [
+                "Công nghệ sinh học",
+                "Công nghệ thực phẩm"
+            ]
+        };
 
-    // Reset
-    khoaField.style.display = 'none';
-    nganhField.style.display = 'none';
-    khoaHocField.style.display = 'none';
-    nganh.disabled = true;
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            const khoaField = document.getElementById('khoaField');
+            const nganhField = document.getElementById('nganhField');
+            const khoaHocField = document.getElementById('khoaHocField');
+            const khoa = document.getElementById('khoa');
+            const nganh = document.getElementById('nganh');
 
-    if(role === 'ROLE_ADMIN') {
-        // Không hiện gì thêm
-    } else if(role === 'ROLE_SINHVIEN') {
-        khoaField.style.display = 'block';
-        nganhField.style.display = 'block';
-        khoaHocField.style.display = 'block';
-        nganh.disabled = (khoa.value === "");
-    } else if(role === 'ROLE_GIAOVU' || role === 'ROLE_GIANGVIEN') {
-        khoaField.style.display = 'block';
-        // không cần ngành và khóa học
-    }
-}
+            // Reset
+            khoaField.style.display = 'none';
+            nganhField.style.display = 'none';
+            khoaHocField.style.display = 'none';
+            nganh.disabled = true;
 
-function updateNganhOptions() {
-    const role = document.getElementById('role').value;
-    const khoa = document.getElementById('khoa').value;
-    const nganh = document.getElementById('nganh');
+            if (role === 'ROLE_ADMIN') {
+                // Không hiện gì thêm
+            } else if (role === 'ROLE_SINHVIEN') {
+                khoaField.style.display = 'block';
+                nganhField.style.display = 'block';
+                khoaHocField.style.display = 'block';
+                nganh.disabled = (khoa.value === "");
+            } else if (role === 'ROLE_GIAOVU' || role === 'ROLE_GIANGVIEN') {
+                khoaField.style.display = 'block';
+                // không cần ngành và khóa học
+            }
+        }
 
-    nganh.innerHTML = '<option value="">-- Chọn ngành --</option>';
+        function updateNganhOptions() {
+            const role = document.getElementById('role').value;
+            const khoa = document.getElementById('khoa').value;
+            const nganh = document.getElementById('nganh');
 
-    if(role === 'ROLE_SINHVIEN' && khoa && NGANH_THEO_KHOA[khoa]) {
-        NGANH_THEO_KHOA[khoa].forEach(ng => {
-            const option = document.createElement('option');
-            option.value = ng;
-            option.textContent = ng;
-            nganh.appendChild(option);
+            nganh.innerHTML = '<option value="">-- Chọn ngành --</option>';
+
+            if (role === 'ROLE_SINHVIEN' && khoa && NGANH_THEO_KHOA[khoa]) {
+                NGANH_THEO_KHOA[khoa].forEach(ng => {
+                    const option = document.createElement('option');
+                    option.value = ng;
+                    option.textContent = ng;
+                    nganh.appendChild(option);
+                });
+                nganh.disabled = false;
+            } else {
+                nganh.disabled = true;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            toggleFields();
+
+            document.getElementById('role').addEventListener('change', () => {
+                document.getElementById('khoa').value = "";
+                document.getElementById('nganh').value = "";
+                document.getElementById('khoaHoc').value = "";
+                updateNganhOptions();
+                toggleFields();
+            });
+
+            document.getElementById('khoa').addEventListener('change', () => {
+                document.getElementById('nganh').value = "";
+                updateNganhOptions();
+                toggleFields();
+            });
+
+            // Validate khi submit
+            document.getElementById('addUserForm').addEventListener('submit', function (e) {
+                let errMsg = [];
+                let fullname = document.getElementById('fullname').value.trim();
+                let username = document.getElementById('username').value.trim();
+                let password = document.getElementById('password').value.trim();
+                let role = document.getElementById('role').value;
+                let email = document.getElementById('email').value.trim();
+
+                if (!fullname)
+                    errMsg.push("Vui lòng nhập họ và tên.");
+                if (!username)
+                    errMsg.push("Vui lòng nhập tên đăng nhập.");
+                if (!password)
+                    errMsg.push("Vui lòng nhập mật khẩu.");
+
+                // Nếu là sinh viên thì kiểm tra thêm
+                if (role === "ROLE_SINHVIEN") {
+                    let khoa = document.getElementById('khoa').value;
+                    let nganh = document.getElementById('nganh').value;
+                    let khoaHoc = document.getElementById('khoaHoc').value.trim();
+                    if (!khoa)
+                        errMsg.push("Vui lòng chọn khoa.");
+                    if (!nganh)
+                        errMsg.push("Vui lòng chọn ngành.");
+                    if (!khoaHoc)
+                        errMsg.push("Vui lòng nhập khóa học.");
+                }
+                // Nếu là giáo vụ hoặc giảng viên thì cần chọn khoa
+                if (role === "ROLE_GIAOVU" || role === "ROLE_GIANGVIEN") {
+                    let khoa = document.getElementById('khoa').value;
+                    if (!khoa)
+                        errMsg.push("Vui lòng chọn khoa.");
+                }
+
+                if (errMsg.length > 0) {
+                    e.preventDefault(); // Ngăn submit
+                    let msgBox = document.getElementById('formErrorMsg');
+                    msgBox.innerHTML = errMsg.join("<br>");
+                    msgBox.style.display = "block";
+                    window.scrollTo(0, 0); // Đưa người dùng lên đầu form nếu bị lỗi
+                    return false;
+                } else {
+                    document.getElementById('formErrorMsg').style.display = "none";
+                }
+            });
         });
-        nganh.disabled = false;
-    } else {
-        nganh.disabled = true;
-    }
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    toggleFields();
-
-    document.getElementById('role').addEventListener('change', () => {
-        // Reset giá trị khi đổi vai trò
-        document.getElementById('khoa').value = "";
-        document.getElementById('nganh').value = "";
-        document.getElementById('khoaHoc').value = "";
-        updateNganhOptions();
-        toggleFields();
-    });
-
-    document.getElementById('khoa').addEventListener('change', () => {
-        document.getElementById('nganh').value = "";
-        updateNganhOptions();
-        toggleFields();
-    });
-});
-</script>
+    </script>
 
 </body>
 </html>
